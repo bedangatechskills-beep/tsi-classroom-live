@@ -1,0 +1,318 @@
+/* Student page /r/:code — phone first (360–420px), still fine on a laptop. */
+
+.student {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-3) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.student .card {
+  padding: var(--space-3);
+}
+
+.student-center {
+  text-align: center;
+  padding-top: var(--space-6);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Join ─────────────────────────────────────────── */
+.student-join {
+  margin-top: var(--space-4);
+}
+.student-join h1 {
+  font-size: var(--text-xl);
+}
+.student-field {
+  gap: var(--space-1);
+  font-weight: 600;
+  color: var(--tsi-navy);
+}
+.student-code-input {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.student-big-button {
+  width: 100%;
+  min-height: 56px;
+  font-size: var(--text-lg);
+}
+.student-chip {
+  margin: 0;
+  background: var(--tsi-ice);
+  color: var(--tsi-navy);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+}
+
+.student-note {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--gray-600);
+}
+.student-error {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 600;
+}
+.student-ok {
+  margin: 0;
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* ── Header ───────────────────────────────────────── */
+.student-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.student-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.student-title {
+  font-size: var(--text-lg);
+  overflow-wrap: anywhere;
+}
+.student-meta {
+  margin: 0;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.student-code {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--tsi-navy);
+}
+.student-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--tsi-blue);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.student-live {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  white-space: nowrap;
+  padding-top: 4px;
+}
+.student-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gray-400);
+}
+.student-live.is-live {
+  color: var(--success);
+}
+.student-live.is-live .student-dot {
+  background: var(--success);
+}
+
+.student-ended {
+  background: var(--tsi-ice);
+  color: var(--tsi-navy);
+  border: 2px solid var(--tsi-blue);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ── Ask ──────────────────────────────────────────── */
+.student-ask {
+  gap: var(--space-2);
+}
+.student-textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.45;
+}
+.student-ask-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.student-counter {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-variant-numeric: tabular-nums;
+}
+.student-counter.is-full {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* ── Poll ─────────────────────────────────────────── */
+.student-poll {
+  gap: var(--space-2);
+  border-left: 4px solid var(--tsi-blue);
+}
+.student-poll-prompt {
+  font-size: var(--text-md);
+  overflow-wrap: anywhere;
+}
+.student-options {
+  gap: var(--space-2);
+}
+.student-option {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.student-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.student-bar {
+  position: relative;
+  min-height: 44px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--gray-100);
+  overflow: hidden;
+}
+.student-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--tsi-blue);
+  opacity: 0.22;
+  border-right: 3px solid var(--tsi-blue);
+  transition: width 0.4s ease;
+}
+.student-bar-label {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  font-weight: 600;
+  color: var(--tsi-navy);
+  overflow-wrap: anywhere;
+}
+.student-bar-label > span:last-child {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Questions ────────────────────────────────────── */
+.student-h2 {
+  font-size: var(--text-lg);
+}
+.student-empty {
+  margin: 0;
+  border: 2px dashed var(--gray-200);
+  border-radius: var(--radius);
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+  color: var(--gray-600);
+}
+.student-questions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.student-q {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+.student-q.is-answered {
+  opacity: 0.6;
+  background: var(--gray-100);
+}
+.student-q-main {
+  flex: 1;
+  min-width: 0;
+}
+.student-q-body {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.student-answered {
+  margin: var(--space-1) 0 0;
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.student-upvote {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  min-height: 52px;
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--gray-200);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--tsi-navy);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.1;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.student-upvote.is-voted {
+  background: var(--tsi-orange);
+  border-color: var(--tsi-orange);
+  color: var(--white);
+  cursor: default;
+}
+.student-upvote:disabled {
+  cursor: default;
+  color: var(--gray-600);
+}
+.student-upvote:focus-visible {
+  outline: 3px solid var(--tsi-blue);
+  outline-offset: 2px;
+}
