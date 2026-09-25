@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classroom Live Wireframe</title>
+<style>
+:root{
+  --bg:#f4f4f2; --panel:#ffffff; --ink:#1d1d1f; --muted:#6b6b70; --line:#d4d4d0;
+  --soft:#ebebe8; --accent:#1f6feb; --accent-ink:#ffffff; --accent-soft:#dbe7fb;
+  --ok:#2e7d32; --warn:#9a6700;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16171a; --panel:#1f2024; --ink:#ececec; --muted:#9a9aa2; --line:#3a3b40;
+    --soft:#2a2b30; --accent:#5b9bff; --accent-ink:#0d1117; --accent-soft:#1d2b44;
+    --ok:#6cc070; --warn:#e0b050;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16171a; --panel:#1f2024; --ink:#ececec; --muted:#9a9aa2; --line:#3a3b40;
+  --soft:#2a2b30; --accent:#5b9bff; --accent-ink:#0d1117; --accent-soft:#1d2b44;
+  --ok:#6cc070; --warn:#e0b050;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:1.5px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px}
+button:hover:not(:disabled){border-color:var(--ink)}
+button:disabled{cursor:default;opacity:.55}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+button.small{padding:4px 10px;font-size:14px}
+input[type=text]{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--panel)}
+input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+/* top chrome */
+.banner{background:repeating-linear-gradient(45deg,var(--soft) 0 12px,var(--bg) 12px 24px);border-bottom:1.5px dashed var(--line);
+  text-align:center;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 16px;font-weight:600}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 16px;background:var(--panel);border-bottom:1.5px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{font-weight:700;margin-right:auto}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{border-radius:999px;font-size:15px}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabs kbd{font-size:11px;opacity:.6;margin-left:4px}
+.sim{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer;user-select:none}
+.sim input{width:18px;height:18px;accent-color:var(--accent)}
+.route{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--muted);text-align:center;padding:8px 16px 0}
+
+main{max-width:1200px;margin:0 auto;padding:16px}
+.scene{display:none}
+.scene.active{display:block}
+.card{background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{display:inline-block;border:1.5px solid var(--line);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600}
+.pill.open{border-color:var(--ok);color:var(--ok)}
+.pill.closed{color:var(--muted)}
+h1,h2,h3{margin:0 0 10px;line-height:1.2}
+.empty{border:1.5px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--muted)}
+
+/* home */
+.home{max-width:760px;margin:0 auto;display:grid;gap:16px}
+.signin{text-align:center;padding:40px 16px}
+.roomrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.roomrow:first-child{border-top:0}
+.code{font-family:ui-monospace,Consolas,monospace;font-weight:700;letter-spacing:.12em}
+.roomrow .meta{flex:1;min-width:160px}
+
+/* presenter */
+.present{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+.bigcode{font-family:ui-monospace,Consolas,monospace;font-size:64px;font-weight:800;letter-spacing:.14em;text-align:center;line-height:1}
+.qr{display:block;margin:14px auto;width:200px;height:200px;background:#fff;padding:10px;border-radius:8px;border:1.5px solid var(--line)}
+.joinurl{text-align:center;font-family:ui-monospace,Consolas,monospace;font-size:16px;word-break:break-all}
+.count{text-align:center;font-size:22px;margin-top:10px}
+.count b{font-size:34px}
+.q{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+.q:first-child{border-top:0}
+.votes{min-width:62px;text-align:center;font-weight:800;font-size:28px;line-height:1}
+.votes small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+.q .text{flex:1;font-size:22px}
+.q .acts{display:flex;gap:6px;flex-wrap:wrap}
+.q.new{animation:flash 1.2s ease-out}
+@keyframes flash{from{background:var(--accent-soft)}to{background:transparent}}
+details.answered{margin-top:14px;border-top:1.5px dashed var(--line);padding-top:10px}
+details.answered summary{cursor:pointer;color:var(--muted);font-weight:600}
+details.answered .q .text{font-size:17px;color:var(--muted);text-decoration:line-through}
+.bar{position:relative;border:1.5px solid var(--line);border-radius:8px;height:40px;margin:8px 0;overflow:hidden;background:var(--soft)}
+.bar .fill{position:absolute;inset:0 auto 0 0;background:var(--accent-soft);border-right:3px solid var(--accent);transition:width .4s}
+.bar .lbl{position:relative;display:flex;justify-content:space-between;align-items:center;height:100%;padding:0 12px;font-weight:600}
+.pollform{display:grid;gap:8px}
+.stack{display:grid;gap:16px}
+
+/* phone */
+.phone{width:380px;max-width:100%;margin:0 auto;border:10px solid var(--ink);border-radius:34px;background:var(--bg);min-height:680px;overflow:hidden;position:relative}
+.phone .notch{width:120px;height:18px;background:var(--ink);border-radius:0 0 12px 12px;margin:0 auto}
+.phone .screen{padding:14px;display:grid;gap:14px;font-size:16px}
+.phone h2{font-size:20px}
+.phone .q .text{font-size:16px}
+.phone .votes{min-width:auto}
+.upvote{display:flex;flex-direction:column;align-items:center;min-width:52px;padding:6px 8px;font-weight:700;line-height:1.1}
+.upvote.voted{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tick{color:var(--ok);font-weight:800}
+.optbtn{width:100%;text-align:left;margin:5px 0;padding:10px 12px}
+.optbtn.mine{border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.note{font-size:13px;color:var(--muted)}
+.chip{background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:14px}
+
+@media (max-width:860px){
+  .present{grid-template-columns:1fr}
+  .bigcode{font-size:48px}
+  .q .text{font-size:18px}
+}
+@media (max-width:420px){
+  .phone{border-width:0;border-radius:0;min-height:0}
+  .phone .notch{display:none}
+  .tabs kbd{display:none}
+}
+</style>
+</head>
+<body>
+<div class="banner">Wireframe — not the real app · all data is fake and lives in this browser tab</div>
+<div class="topbar">
+  <div class="brand">TSI Classroom Live</div>
+  <div class="tabs" role="tablist">
+    <button role="tab" data-scene="home">Instructor home<kbd>1</kbd></button>
+    <button role="tab" data-scene="present">Presenter<kbd>2</kbd></button>
+    <button role="tab" data-scene="student">Student phone<kbd>3</kbd></button>
+  </div>
+  <label class="sim"><input type="checkbox" id="simToggle"> Simulate class</label>
+</div>
+<div class="route" id="route"></div>
+
+<main>
+  <!-- SCENE 1: instructor home -->
+  <section class="scene" id="scene-home">
+    <div class="home">
+      <div class="card signin" id="signinCard">
+        <h1>Instructor sign-in</h1>
+        <p class="muted">Only the instructor signs in. Students never need an account.</p>
+        <button class="primary" id="signinBtn">Sign in with GitHub</button>
+      </div>
+      <div id="homeSignedIn" hidden>
+        <div class="card">
+          <div class="row" style="justify-content:space-between">
+            <div><h2 style="margin:0">Your rooms</h2><span class="muted" id="whoami"></span></div>
+            <div class="row"><button class="primary" id="newRoomBtn">+ New room</button><button class="small" id="signoutBtn">Sign out</button></div>
+          </div>
+          <div id="roomList" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 2: presenter -->
+  <section class="scene" id="scene-present">
+    <div id="presentEmpty" class="empty" hidden>No room selected. Go to <b>Instructor home</b>, sign in and create a room.</div>
+    <div class="present" id="presentBody">
+      <div class="stack">
+        <div class="card">
+          <div class="muted" style="text-align:center">Join at</div>
+          <div class="joinurl" id="pJoinUrl"></div>
+          <div id="pQr"></div>
+          <div class="muted" style="text-align:center">Room code</div>
+          <div class="bigcode" id="pCode"></div>
+          <div class="count"><b id="pCount">0</b> in the room</div>
+          <div style="text-align:center;margin-top:8px" id="pStatus"></div>
+        </div>
+        <div class="card">
+          <h3>Poll <span class="note">(instructor only)</span></h3>
+          <div id="pPoll"></div>
+          <div class="pollform" id="pollForm">
+            <input type="text" id="pollQ" placeholder="Poll question, e.g. Is useEffect clear now?">
+            <div id="pollOpts"></div>
+            <div class="row">
+              <button class="small" id="addOpt">+ Option</button>
+              <button class="small" id="rmOpt">− Option</button>
+              <span class="note">2–4 options</span>
+            </div>
+            <button class="primary" id="startPoll">Start poll</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2 style="margin:0">Questions</h2>
+          <span class="note">Sorted by votes · anonymous · live</span>
+        </div>
+        <div id="pQuestions" style="margin-top:10px"></div>
+        <div id="pAnswered"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 3: student -->
+  <section class="scene" id="scene-student">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen" id="sJoin">
+        <h2>Join the class</h2>
+        <div class="chip">No account needed. Just a code and any nickname.</div>
+        <label>Room code<input type="text" id="joinCode" maxlength="6" autocomplete="off" style="text-transform:uppercase;letter-spacing:.2em;font-family:ui-monospace,Consolas,monospace"></label>
+        <label>Nickname<input type="text" id="joinNick" maxlength="20" placeholder="Anything you like"></label>
+        <div class="note">Your nickname is never shown on your questions.</div>
+        <button class="primary" id="joinBtn">Join</button>
+        <div class="note" id="joinErr" style="color:var(--warn)"></div>
+      </div>
+      <div class="screen" id="sRoom" hidden>
+        <div class="row" style="justify-content:space-between">
+          <div><span class="code" id="sCode"></span> <span class="note" id="sNick"></span></div>
+          <button class="small" id="leaveBtn">Leave</button>
+        </div>
+        <div id="sClosed" class="empty" hidden>This room is closed. Thanks for joining!</div>
+        <div id="sAsk">
+          <textarea id="askText" rows="3" style="width:100%;padding:10px;border:1.5px solid var(--line);border-radius:8px;background:var(--panel);font:inherit;color:inherit;resize:vertical" placeholder="Ask in English, Nepali, or mixed — it's okay. Your English doesn't need to be perfect."></textarea>
+          <div class="row" style="justify-content:space-between;margin-top:6px">
+            <span class="note">Anonymous · no one sees your name</span>
+            <button class="primary" id="askBtn">Ask</button>
+          </div>
+        </div>
+        <div id="sPoll"></div>
+        <div>
+          <h2>Questions</h2>
+          <div id="sQuestions"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const JOIN_HOST = "classroom-live.example/r/";
+
+// ---------- shared in-memory state ----------
+const S = {
+  user: null,
+  rooms: [],            // {code, open, created}
+  current: null,        // room code shown on presenter / student default
+  questions: [],        // {id, room, text, votes, hidden, answered, ts}
+  polls: {},            // room -> {id, q, options:[{t,v}], open}
+  participants: {},     // room -> count
+  student: null,        // {code, nick, voted:Set(qid), pollVotes:{pollId: idx}}
+  seen: new Set(),      // question ids already rendered (for flash)
+  answeredOpen: false,
+  scene: "home",
+};
+let nextId = 1;
+
+const ALPHA = "ABCDEFGHJKMNPQRSTUVWXYZ"; // no I, L, O (and no digits)
+function newCode() {
+  let c;
+  do { c = Array.from({length: 6}, () => pick(ALPHA)).join(""); }
+  while (S.rooms.some(r => r.code === c));
+  return c;
+}
+function room(code) { return S.rooms.find(r => r.code === code); }
+function addRoom() {
+  const r = {code: newCode(), open: true, created: new Date()};
+  S.rooms.unshift(r); S.participants[r.code] = 0; S.current = r.code;
+  return r;
+}
+function addQuestion(code, text, votes = 0) {
+  const q = {id: nextId++, room: code, text, votes, hidden: false, answered: false, ts: Date.now()};
+  S.questions.push(q); return q;
+}
+const sortQ = list => list.slice().sort((a, b) => b.votes - a.votes || a.ts - b.ts);
+const roomQs = code => S.questions.filter(q => q.room === code);
+
+// ---------- seed: one demo room with a few questions ----------
+(function seed() {
+  const r = addRoom();
+  S.participants[r.code] = 14;
+  addQuestion(r.code, "useState ko setter call garda turuntai value kina change hudaina?", 5);
+  addQuestion(r.code, "what is diff between props and state i not understand", 3);
+  addQuestion(r.code, "Can we use async function directly inside useEffect?", 2);
+  const a = addQuestion(r.code, "Vite ra Create React App ma k farak cha?", 4); a.answered = true;
+  S.questions.forEach(q => S.seen.add(q.id));
+})();
+
+// ---------- fake QR (deterministic SVG from the code) ----------
+function qrSvg(text) {
+  const N = 25; let h = 2166136261;
+  for (const ch of text) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const rnd = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; };
+  const inFinder = (x, y) => [[0, 0], [N - 7, 0], [0, N - 7]].some(([fx, fy]) => x >= fx - 1 && x <= fx + 7 && y >= fy - 1 && y <= fy + 7);
+  let rects = "";
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++)
+    if (!inFinder(x, y) && rnd() < 0.48) rects += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  const finder = (fx, fy) => `<rect x="${fx}" y="${fy}" width="7" height="7"/><rect x="${fx + 1}" y="${fy + 1}" width="5" height="5" fill="#fff"/><rect x="${fx + 2}" y="${fy + 2}" width="3" height="3"/>`;
+  return `<svg class="qr" viewBox="0 0 ${N} ${N}" shape-rendering="crispEdges" role="img" aria-label="QR code (fake) linking to ${esc(JOIN_HOST + text)}"><g fill="#111">${rects}${finder(0, 0)}${finder(N - 7, 0)}${finder(0, N - 7)}</g></svg>`;
+}
+
+// ---------- scene switching ----------
+function setScene(name) {
+  S.scene = name;
+  document.querySelectorAll(".scene").forEach(s => s.classList.toggle("active", s.id === "scene-" + name));
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.scene === name));
+  render();
+}
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => setScene(b.dataset.scene));
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input, textarea") || e.ctrlKey || e.metaKey || e.altKey) return;
+  const map = {"1": "home", "2": "present", "3": "student"};
+  if (map[e.key]) setScene(map[e.key]);
+});
+
+// ---------- render ----------
+function render() {
+  const code = S.scene === "student" && S.student ? S.student.code : S.current;
+  $("route").textContent = S.scene === "home" ? "route: /" :
+    S.scene === "present" ? `route: /present/${S.current || ":code"}` : `route: /r/${code || ":code"}`;
+  renderHome(); renderPresent(); renderStudent();
+}
+
+function renderHome() {
+  $("signinCard").hidden = !!S.user;
+  $("homeSignedIn").hidden = !S.user;
+  if (!S.user) return;
+  $("whoami").textContent = `Signed in as ${S.user} (GitHub)`;
+  if (!S.rooms.length) { $("roomList").innerHTML = `<div class="empty">No rooms yet. Click “New room”.</div>`; return; }
+  $("roomList").innerHTML = S.rooms.map(r => {
+    const qs = roomQs(r.code);
+    const open = qs.filter(q => !q.hidden && !q.answered).length;
+    return `<div class="roomrow">
+      <span class="code" style="font-size:22px">${r.code}</span>
+      <span class="pill ${r.open ? "open" : "closed"}">${r.open ? "open" : "closed"}</span>
+      <div class="meta muted">${qs.length} questions · ${open} unanswered · ${S.participants[r.code] || 0} joined</div>
+      <button class="small" data-act="present" data-code="${r.code}">Present</button>
+      ${r.open ? `<button class="small" data-act="close" data-code="${r.code}">Close room</button>`
+               : `<button class="small" data-act="reopen" data-code="${r.code}">Reopen</button>`}
+      <button class="small" data-act="export" data-code="${r.code}">Export recap (.md)</button>
+    </div>`;
+  }).join("");
+}
+
+function renderPresent() {
+  const r = room(S.current);
+  $("presentEmpty").hidden = !!r;
+  $("presentBody").hidden = !r;
+  if (!r) return;
+  $("pCode").textContent = r.code;
+  $("pJoinUrl").textContent = JOIN_HOST + r.code;
+  if ($("pQr").dataset.code !== r.code) { $("pQr").innerHTML = qrSvg(r.code); $("pQr").dataset.code = r.code; }
+  $("pCount").textContent = S.participants[r.code] || 0;
+  $("pStatus").innerHTML = r.open ? `<span class="pill open">room open</span>` : `<span class="pill closed">room closed</span>`;
+
+  const qs = roomQs(r.code).filter(q => !q.hidden);
+  const live = sortQ(qs.filter(q => !q.answered));
+  const done = sortQ(qs.filter(q => q.answered));
+  const signed = !!S.user;
+  $("pQuestions").innerHTML = live.length ? live.map(q => `
+    <div class="q ${S.seen.has(q.id) ? "" : "new"}">
+      <div class="votes">${q.votes}<small>votes</small></div>
+      <div class="text">${esc(q.text)}</div>
+      ${signed ? `<div class="acts"><button class="small" data-act="answer" data-id="${q.id}">✓ Mark answered</button><button class="small" data-act="hide" data-id="${q.id}">Hide</button></div>` : ""}
+    </div>`).join("") : `<div class="empty">No questions yet. Scan the QR and ask — any language is fine.</div>`;
+  $("pAnswered").innerHTML = done.length ? `<details class="answered" ${S.answeredOpen ? "open" : ""}>
+    <summary>Answered (${done.length})</summary>
+    ${done.map(q => `<div class="q"><div class="votes" style="font-size:18px">${q.votes}</div><div class="text">${esc(q.text)}</div>
+      ${signed ? `<div class="acts"><button class="small" data-act="unanswer" data-id="${q.id}">Undo</button></div>` : ""}</div>`).join("")}
+  </details>` : "";
+  const d = $("pAnswered").querySelector("details");
+  if (d) d.ontoggle = () => { S.answeredOpen = d.open; };
+  if (!signed) $("pQuestions").insertAdjacentHTML("afterbegin", `<div class="note" style="margin-bottom:6px">Sign in on Instructor home to see Hide / Mark answered.</div>`);
+
+  const p = S.polls[r.code];
+  $("pPoll").innerHTML = p ? pollBars(p) + (p.open && signed ? `<button class="small" data-act="closepoll">Close poll</button>` : "") +
+    `<hr style="border:0;border-top:1px dashed var(--line);margin:14px 0">` : "";
+  $("pollForm").hidden = !signed || !!(p && p.open);
+  S.questions.forEach(q => S.seen.add(q.id));
+}
+
+function pollBars(p) {
+  const total = p.options.reduce((s, o) => s + o.v, 0);
+  return `<div style="font-weight:700;font-size:19px">${esc(p.q)}</div>
+    <div class="note">${p.open ? "Voting open" : "Poll closed"} · ${total} vote${total === 1 ? "" : "s"}</div>
+    ${p.options.map(o => { const pct = total ? Math.round(o.v / total * 100) : 0;
+      return `<div class="bar"><div class="fill" style="width:${pct}%"></div><div class="lbl"><span>${esc(o.t)}</span><span>${pct}% · ${o.v}</span></div></div>`; }).join("")}`;
+}
+
+function renderStudent() {
+  const st = S.student;
+  $("sJoin").hidden = !!st; $("sRoom").hidden = !st;
+  if (!st) { if (!$("joinCode").value && S.current) $("joinCode").value = S.current; return; }
+  const r = room(st.code);
+  $("sCode").textContent = st.code;
+  $("sNick").textContent = `· you are “${st.nick}” (only you see this)`;
+  $("sClosed").hidden = r.open; $("sAsk").hidden = !r.open;
+
+  const p = S.polls[st.code];
+  if (p) {
+    const mine = st.pollVotes[p.id];
+    if (p.open && mine === undefined) {
+      $("sPoll").innerHTML = `<div class="card"><div class="note">Live poll · one vote</div><div style="font-weight:700;margin:4px 0 6px">${esc(p.q)}</div>
+        ${p.options.map((o, i) => `<button class="optbtn" data-act="pollvote" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`;
+    } else {
+      $("sPoll").innerHTML = `<div class="card">${pollBars(p)}<div class="note">${mine !== undefined ? `You voted: <b>${esc(p.options[mine].t)}</b>. ` : ""}${p.open ? "Your vote is locked in." : "Poll closed — voting locked."}</div></div>`;
+    }
+  } else $("sPoll").innerHTML = "";
+
+  const qs = sortQ(roomQs(st.code).filter(q => !q.hidden));
+  $("sQuestions").innerHTML = qs.length ? qs.map(q => {
+    const voted = st.voted.has(q.id);
+    return `<div class="q">
+      <button class="upvote ${voted ? "voted" : ""}" data-act="upvote" data-id="${q.id}" aria-pressed="${voted}" title="${voted ? "You already voted" : "Upvote"}">▲<span>${q.votes}</span></button>
+      <div class="text">${esc(q.text)} ${q.answered ? `<div class="tick">✓ Answered</div>` : ""}</div>
+    </div>`; }).join("") : `<div class="empty">No questions yet — be the first. Any language is fine.</div>`;
+}
+
+// ---------- actions ----------
+$("signinBtn").onclick = () => { S.user = "Bedanga"; render(); };
+$("signoutBtn").onclick = () => { S.user = null; render(); };
+$("newRoomBtn").onclick = () => { addRoom(); render(); };
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const act = b.dataset.act, code = b.dataset.code, id = +b.dataset.id;
+  const q = S.questions.find(x => x.id === id);
+  switch (act) {
+    case "present": S.current = code; setScene("present"); return;
+    case "close": room(code).open = false; if (S.polls[code]) S.polls[code].open = false; break;
+    case "reopen": room(code).open = true; break;
+    case "export": exportRecap(code); return;
+    case "answer": q.answered = true; break;
+    case "unanswer": q.answered = false; break;
+    case "hide": q.hidden = true; break;
+    case "closepoll": S.polls[S.current].open = false; break;
+    case "upvote": if (!S.student.voted.has(id)) { S.student.voted.add(id); q.votes++; } break; // second tap: no-op
+    case "pollvote": {
+      const p = S.polls[S.student.code];
+      if (p && p.open && S.student.pollVotes[p.id] === undefined) { S.student.pollVotes[p.id] = +b.dataset.i; p.options[+b.dataset.i].v++; }
+      break;
+    }
+  }
+  render();
+});
+
+function exportRecap(code) {
+  const qs = sortQ(roomQs(code).filter(q => !q.hidden && !q.answered));
+  const date = new Date().toISOString().slice(0, 10);
+  const md = `# Class recap — room ${code}\n\n_${date} · ${qs.length} unanswered question${qs.length === 1 ? "" : "s"}, sorted by votes_\n\n` +
+    (qs.length ? qs.map((q, i) => `${i + 1}. **(${q.votes} vote${q.votes === 1 ? "" : "s"})** ${q.text.replace(/\n/g, " ")}`).join("\n") : "_No unanswered questions._") +
+    `\n\n---\nCarry these into the next session.\n`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([md], {type: "text/markdown"}));
+  a.download = `recap-${code}-${date}.md`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// poll creation form (instructor)
+let optCount = 2;
+function drawOpts() {
+  const old = [...$("pollOpts").querySelectorAll("input")].map(i => i.value);
+  const defaults = ["Yes, clear", "Mostly", "Not yet", "Lost"];
+  $("pollOpts").innerHTML = Array.from({length: optCount}, (_, i) =>
+    `<input type="text" style="margin-bottom:6px" placeholder="Option ${i + 1} (e.g. ${defaults[i]})" value="${esc(old[i] || "")}">`).join("");
+  $("addOpt").disabled = optCount >= 4; $("rmOpt").disabled = optCount <= 2;
+}
+$("addOpt").onclick = () => { optCount = Math.min(4, optCount + 1); drawOpts(); };
+$("rmOpt").onclick = () => { optCount = Math.max(2, optCount - 1); drawOpts(); };
+$("startPoll").onclick = () => {
+  const inputs = [...$("pollOpts").querySelectorAll("input")];
+  const defaults = ["Yes, clear", "Mostly", "Not yet", "Lost"];
+  const opts = inputs.map((i, k) => i.value.trim() || defaults[k]);
+  const qText = $("pollQ").value.trim() || "Is this topic clear now?";
+  S.polls[S.current] = {id: nextId++, q: qText, options: opts.map(t => ({t, v: 0})), open: true};
+  $("pollQ").value = ""; inputs.forEach(i => i.value = "");
+  render();
+};
+drawOpts();
+
+// student join / ask
+$("joinBtn").onclick = () => {
+  const code = $("joinCode").value.trim().toUpperCase();
+  const nick = $("joinNick").value.trim();
+  const r = room(code);
+  if (!r) return $("joinErr").textContent = "No room with that code. Check the projector.";
+  if (!r.open) return $("joinErr").textContent = "That room is closed.";
+  if (!nick) return $("joinErr").textContent = "Pick any nickname — it stays private.";
+  $("joinErr").textContent = "";
+  S.student = {code, nick, voted: new Set(), pollVotes: {}};
+  S.participants[code] = (S.participants[code] || 0) + 1;
+  render();
+};
+$("joinNick").addEventListener("keydown", e => { if (e.key === "Enter") $("joinBtn").click(); });
+$("leaveBtn").onclick = () => { S.student = null; render(); };
+$("askBtn").onclick = () => {
+  const t = $("askText").value.trim();
+  if (!t || !S.student || !room(S.student.code).open) return;
+  addQuestion(S.student.code, t.slice(0, 300));
+  $("askText").value = ""; render();
+};
+$("askText").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("askBtn").click(); } });
+
+// ---------- simulate class ----------
+const SIM_QS = [
+  "useEffect ma dependency array kina chahiyo?",
+  "what is diff between props and state i not understand",
+  "key prop le k garcha list ma?",
+  "why my component render two times in dev mode?",
+  "Supabase RLS bhaneko k ho, simple ma bujhaidinu na",
+  "can you explain again the map function, i am little confuse",
+  "fetch ra axios ma kun ramro?",
+  "How do I pass data from child to parent component?",
+  "npm run dev garda port already in use aayo, k garne?",
+  "context api and redux which one use for small project?",
+  "git push garda rejected aayo, pull garnu parcha ki?",
+  "what means 'lifting state up' sir?",
+  "Is it okay to put API key in frontend .env file?",
+  "useRef kaha use garne, useState bhanda k farak?",
+  "i try but the page not update after setState why",
+  "Vercel ma deploy garda env variable kasari halne?",
+];
+let simTimer = null;
+function simTick() {
+  const r = room(S.current);
+  if (r && r.open) {
+    if (Math.random() < 0.55) addQuestion(r.code, pick(SIM_QS));
+    const live = roomQs(r.code).filter(q => !q.hidden && !q.answered);
+    for (let i = 0, n = 1 + Math.floor(Math.random() * 3); i < n && live.length; i++) pick(live).votes++;
+    const p = S.polls[r.code];
+    if (p && p.open) for (let i = 0; i < 2; i++) if (Math.random() < 0.7) pick(p.options).v++;
+    if (Math.random() < 0.4) S.participants[r.code]++;
+    render();
+  }
+  simTimer = setTimeout(simTick, 2000 + Math.random() * 1000);
+}
+$("simToggle").onchange = e => {
+  clearTimeout(simTimer); simTimer = null;
+  if (e.target.checked) simTimer = setTimeout(simTick, 800);
+};
+
+setScene("home");
+})();
+</script>
+</body>
+</html>

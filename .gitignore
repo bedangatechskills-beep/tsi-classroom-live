@@ -1,0 +1,20 @@
+# dependencies and build output
+node_modules
+dist
+dist-ssr
+*.local
+
+# env files (keep the example)
+.env*
+!.env.example
+
+# logs and editor
+*.log
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# agent working folders
+.firstmate/
+.lavish/

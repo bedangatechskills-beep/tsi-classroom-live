@@ -1,0 +1,43 @@
+/* TSI Classroom Live design tokens */
+:root {
+  /* Brand */
+  --tsi-orange: #f05921; /* buttons only, always white bold text */
+  --tsi-orange-text: #c2410c; /* orange for text on light backgrounds */
+  --tsi-blue: #005ea1;
+  --tsi-navy: #102844; /* projector background */
+  --tsi-ice: #edf5ff;
+
+  /* Neutrals */
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-400: #94a3b8;
+  --gray-600: #475569;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+
+  /* Status */
+  --success: #15803d;
+  --danger: #b91c1c;
+
+  /* Type */
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --text-sm: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.5rem;
+  --text-huge: clamp(4rem, 14vw, 12rem);
+
+  /* Space and shape */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgb(16 40 68 / 0.08), 0 4px 16px rgb(16 40 68 / 0.06);
+}
